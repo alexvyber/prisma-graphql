@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  prisma-pg:
+    image: postgres:15-alpine
+    hostname: prisma-pg
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: dbPass
+      POSTGRES_DB: file_manager
+    # networks:
+    #   - pg-admin
+
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
+#
+# networks:
+#   pg-admin:
+#     external: true

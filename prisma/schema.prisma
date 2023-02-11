@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model File {
+  id          String        @id @default(uuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  directory   Directory     @relation(fields: [directoryId], references: [id])
+  directoryId String
+  versions    FileVersion[]
+
+  @@map("files")
+}
+
+model FileVersion {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mimeType  String
+  size      Int
+  file      File     @relation(fields: [fileId], references: [id])
+  fileId    String
+
+  @@map("file_versions")
+}
+
+model Directory {
+  id          String      @id @default(uuid())
+  name        String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  parent      Directory?  @relation("DirectoryToDirectory", fields: [parentId], references: [id])
+  parentId    String?
+  directories Directory[] @relation("DirectoryToDirectory")
+  files       File[]
+
+  @@map("directories")
+}
